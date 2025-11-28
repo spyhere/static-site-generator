@@ -1,5 +1,5 @@
 import unittest
-from utils import extract_markdown_images, split_nodes_delimiter, text_node_to_html_node
+from utils import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, text_node_to_html_node
 from textnode import TextNode, TextType
 
 
@@ -48,6 +48,19 @@ class TestExtractMarkdownImages(unittest.TestCase):
     def test_multiple_images_extraction(self):
         res = extract_markdown_images(f"1st image: ![first]({mock_img_url}) and 2nd image: ![second]({mock_img_url})")
         self.assertListEqual([("first", mock_img_url), ("second", mock_img_url)], res)
+
+class TestExtractMarkdownLinks(unittest.TestCase):
+    def test_link_extraction(self):
+        res = extract_markdown_links(f"Here is my [link]({mock_img_url}) in the text")
+        self.assertListEqual([("link", mock_img_url)], res)
+
+    def test_multiple_links_extraction(self):
+        res = extract_markdown_links(f"1st link: [first]({mock_img_url}), 2nd link: [second]({mock_img_url})")
+        self.assertListEqual([("first", mock_img_url), ("second", mock_img_url)], res)
+
+    def test_to_extract_only_links(self):
+        res = extract_markdown_links(f"link: [link]({mock_img_url}), image: ![image]({mock_img_url})")
+        self.assertListEqual([("link", mock_img_url)], res)
 
 if __name__ == "__main__":
     unittest.main()

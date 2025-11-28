@@ -35,3 +35,7 @@ def extract_markdown_images(text: str) -> list[tuple[str, str]]:
     # ![some alt text](http://localhost:3000) -> [("some alt text", "http://localhost:300")]
     return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
 
+def extract_markdown_links(text: str) -> list[tuple[str, str]]:
+    # [some link](http://localhost:3000) -> [("some link", "http://localhost:3000")]
+    return re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
+
