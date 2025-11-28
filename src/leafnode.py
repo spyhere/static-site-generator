@@ -23,6 +23,10 @@ class LeafNode(HTMLNode):
                 return f"<span>{self.value}</span>"
             case "div":
                 return f"<div>{self.value}</div>"
+            case "code":
+                return f"<code>{self.value}</code>"
+            case "img":
+                return f"<img{self.props_to_html()} />"
             case _:
                 return self.value
 
