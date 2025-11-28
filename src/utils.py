@@ -41,11 +41,12 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     res: list[TextNode] = []
     for node in old_nodes:
-        text, curr_text_type = node.text, node.text_type
+        text, orig_text_type, orig_url = node.text, node.text_type, node.url
         extracted_images = extract_markdown_images(text)
         for idx, it in enumerate(re.split(MD_IMAGE_ALL_REGEXP, text)):
-            res.append(TextNode(it, curr_text_type))
-            if idx < len(extracted_images):
+            if it: # Do not add empty string that can appear at the end of list
+                res.append(TextNode(it, orig_text_type, orig_url))
+            if (idx < len(extracted_images)):
                 alt, url = extracted_images[idx]
                 res.append(TextNode(alt, TextType.IMAGE, url))
     return res
@@ -54,10 +55,11 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     res: list[TextNode] = []
     for node in old_nodes:
-        text, curr_text_type = node.text, node.text_type
+        text, curr_text_type, curr_url = node.text, node.text_type, node.url
         extracted_links = extract_markdown_links(text)
         for idx, it in enumerate(re.split(MD_LINK_ALL_REGEXP, text)):
-            res.append(TextNode(it, curr_text_type))
+            if it: # Do not add empty string that can appear at the end of list
+                res.append(TextNode(it, curr_text_type, curr_url))
             if idx < len(extracted_links):
                 link_text, url = extracted_links[idx]
                 res.append(TextNode(link_text, TextType.LINK, url))

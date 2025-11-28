@@ -75,6 +75,15 @@ class TestSplitNodesImage(unittest.TestCase):
         ]
         self.assertListEqual(expected, res)
 
+    def test_should_keep_props_intact(self):
+        nodes = [
+            TextNode("Text ", TextType.TEXT),
+            TextNode("link", TextType.LINK, mock_img_url),
+            TextNode(" end.", TextType.TEXT)
+        ]
+        res = split_nodes_image(nodes)
+        self.assertListEqual(nodes, res)
+
     def test_no_images_extraction(self):
         nodes = [TextNode("There is no images here.", TextType.TEXT)]
         res = split_nodes_image(nodes)
@@ -92,6 +101,15 @@ class TestSplitNodesLink(unittest.TestCase):
             TextNode(" to press.", TextType.TEXT)
         ]
         self.assertListEqual(expected, res)
+
+    def test_should_keep_props_intact(self):
+        nodes = [
+            TextNode("Text ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, mock_img_url),
+            TextNode(" end.", TextType.TEXT)
+        ]
+        res = split_nodes_link(nodes)
+        self.assertListEqual(nodes, res)
 
     def test_no_links_extraction(self):
         nodes = [TextNode("There is no links here.", TextType.TEXT)]
