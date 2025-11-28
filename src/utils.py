@@ -38,4 +38,31 @@ def extract_markdown_images(text: str) -> list[tuple[str, str]]:
 def extract_markdown_links(text: str) -> list[tuple[str, str]]:
     # [some link](http://localhost:3000) -> [("some link", "http://localhost:3000")]
     return re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
+MD_IMAGE_ALL_REGEXP = r"!\[.*?\]\(.*?\)"
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    res: list[TextNode] = []
+    for node in old_nodes:
+        text, curr_text_type = node.text, node.text_type
+        extracted_images = extract_markdown_images(text)
+        # ![alt text](http://localhost:3000) -> ![alt text](http://localhost:3000)
+        for idx, it in enumerate(re.split(MD_IMAGE_ALL_REGEXP, text)):
+            res.append(TextNode(it, curr_text_type))
+            if idx < len(extracted_images):
+                alt, url = extracted_images[idx]
+                res.append(TextNode(alt, TextType.IMAGE, url))
+    return res
+
+
+MD_LINK_ALL_REGEXP = r"(?<!!)\[.*?\]\(.*?\)"
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    res: list[TextNode] = []
+    for node in old_nodes:
+        text, curr_text_type = node.text, node.text_type
+        extracted_links = extract_markdown_links(text)
+        for idx, it in enumerate(re.split(MD_LINK_ALL_REGEXP, text)):
+            res.append(TextNode(it, curr_text_type))
+            if idx < len(extracted_links):
+                link_text, url = extracted_links[idx]
+                res.append(TextNode(link_text, TextType.LINK, url))
+    return res
 
