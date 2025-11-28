@@ -1,5 +1,6 @@
 import unittest
-from utils import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node
+import test_textnode
+from utils import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
 from textnode import TextNode, TextType
 
 
@@ -115,6 +116,28 @@ class TestSplitNodesLink(unittest.TestCase):
         nodes = [TextNode("There is no links here.", TextType.TEXT)]
         res = split_nodes_link(nodes)
         self.assertListEqual(nodes, res)
+
+class TestTextToTextnodes(unittest.TestCase):
+    def test_multiple_embellishment(self):
+        doc = f"This is **text** with an _italic_ word and a `code block` and an ![obi wan image]({mock_img_url}) and a [link]({mock_img_url})"
+        res = text_to_textnodes(doc)
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, mock_img_url),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, mock_img_url)
+        ]
+        self.assertListEqual(expected, res)
+
+    def test_empty_document(self):
+        res = text_to_textnodes("")
+        self.assertListEqual([], res)
 
 if __name__ == "__main__":
     unittest.main()
