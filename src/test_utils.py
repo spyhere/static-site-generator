@@ -1,6 +1,6 @@
 import unittest
 import test_textnode
-from utils import extract_markdown_images, extract_markdown_links, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
+from utils import BlockType, block_to_block_type, extract_markdown_images, extract_markdown_links, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
 from textnode import TextNode, TextType
 
 
@@ -157,6 +157,80 @@ This is a paragraph of text. It has some **bold** and _italic_ words inside of i
             "- This is the first list item in a list block\n- second\n- third"
         ]
         self.assertListEqual(expected, res)
+
+class TestBlockToBlockType(unittest.TestCase):
+    def test_heading(self):
+        doc = "# Title"
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.HEADING)
+        doc = """
+###### Title
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.HEADING)
+        doc = "#Title"
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_code(self):
+        doc = """
+```
+print("Test")
+```
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.CODE)
+        doc = """
+``
+var a = null
+``
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_quote(self):
+        doc = """
+> This is quote
+> and this is as well
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.QUOTE)
+        doc = """
+> This is quote
+this is not a quote anymore
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_unordered_list(self):
+        doc = """
+- List
+- Unordered
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.UNORDERED_LIST)
+        doc = """
+- List
+Not anymore
+- This will not help
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_ordered_list(self):
+        doc = """
+1. Item 1
+2. Item 2
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.ORDERED_LIST)
+        doc = """
+1. Item 1
+2. Item 2
+This broke md markdown
+        """
+        res = block_to_block_type(doc)
+        self.assertEqual(res, BlockType.PARAGRAPH)
 
 if __name__ == "__main__":
     unittest.main()

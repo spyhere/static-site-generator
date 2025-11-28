@@ -2,6 +2,16 @@ import re
 from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
 from leafnode import LeafNode
 from textnode import TextNode, TextType
+from enum import Enum
+
+
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
 
 
 def text_node_to_html_node(node: TextNode) -> LeafNode:
@@ -79,4 +89,21 @@ def markdown_to_blocks(document: str) -> list[str]:
         if it:
             res.append(it.strip())
     return res
+
+def block_to_block_type(document: str) -> BlockType:
+    stripped = document.strip()
+    if stripped.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
+        return BlockType.HEADING
+    if len(re.findall(r"`{3}(.*\n)+`{3}", document, re.MULTILINE)) > 0:
+        return BlockType.CODE
+    splitted_multiline = stripped.split("\n")
+    if len(splitted_multiline) > 0:
+        if len(list(filter(lambda it: it.startswith(">"), splitted_multiline))) == len(splitted_multiline):
+            return BlockType.QUOTE
+        if len(list(filter(lambda it: it.startswith("-"), splitted_multiline))) == len(splitted_multiline):
+            return BlockType.UNORDERED_LIST
+        if len(list(filter(lambda  it: it[1].startswith(str(it[0] + 1)), enumerate(splitted_multiline)))) == len(splitted_multiline):
+            return BlockType.ORDERED_LIST
+        return BlockType.PARAGRAPH
+    return BlockType.PARAGRAPH
 
