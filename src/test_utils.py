@@ -1,5 +1,5 @@
 import unittest
-from utils import split_nodes_delimiter, text_node_to_html_node
+from utils import extract_markdown_images, split_nodes_delimiter, text_node_to_html_node
 from textnode import TextNode, TextType
 
 
@@ -39,6 +39,15 @@ class TestSplitNodesDelimiter(unittest.TestCase):
             TextNode(" example", TextType.TEXT)
         ]
         self.assertListEqual(res, expected)
+
+class TestExtractMarkdownImages(unittest.TestCase):
+    def test_image_extraction(self):
+        res = extract_markdown_images(f"Here is the image of my ![some alt text]({mock_img_url}) avatar")
+        self.assertListEqual([("some alt text", mock_img_url)], res)
+
+    def test_multiple_images_extraction(self):
+        res = extract_markdown_images(f"1st image: ![first]({mock_img_url}) and 2nd image: ![second]({mock_img_url})")
+        self.assertListEqual([("first", mock_img_url), ("second", mock_img_url)], res)
 
 if __name__ == "__main__":
     unittest.main()

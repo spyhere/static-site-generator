@@ -1,3 +1,4 @@
+import re
 from leafnode import LeafNode
 from textnode import TextNode, TextType
 
@@ -29,3 +30,8 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
             else:
                 res.append(TextNode(it, text_type))
     return res
+
+def extract_markdown_images(text: str) -> list[tuple[str, str]]:
+    # ![some alt text](http://localhost:3000) -> [("some alt text", "http://localhost:300")]
+    return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+
