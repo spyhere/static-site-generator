@@ -19,3 +19,13 @@ def text_node_to_html_node(node: TextNode) -> LeafNode:
         case _:
             return LeafNode(value=node.text)
 
+def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: TextType) -> list[TextNode]:
+    res = []
+    for node in old_nodes:
+        text, curr_text_type = node.text, node.text_type
+        for idx, it in enumerate(text.split(delimiter)):
+            if idx % 2 == 0:
+                res.append(TextNode(it, curr_text_type))
+            else:
+                res.append(TextNode(it, text_type))
+    return res
