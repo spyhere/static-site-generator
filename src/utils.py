@@ -73,3 +73,10 @@ def text_to_textnodes(document: str) -> list[TextNode]:
     res = split_nodes_link(res)
     return res
 
+def markdown_to_blocks(document: str) -> list[str]:
+    res: list[str] = []
+    for it in document.split("\n\n"):
+        if it:
+            res.append(it.strip())
+    return res
+

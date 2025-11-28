@@ -1,6 +1,6 @@
 import unittest
 import test_textnode
-from utils import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
+from utils import extract_markdown_images, extract_markdown_links, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
 from textnode import TextNode, TextType
 
 
@@ -138,6 +138,25 @@ class TestTextToTextnodes(unittest.TestCase):
     def test_empty_document(self):
         res = text_to_textnodes("")
         self.assertListEqual([], res)
+
+class TestMarkdownToBlocks(unittest.TestCase):
+    def test_split_to_blocks(self):
+        md = """
+# This is a heading
+
+This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
+
+- This is the first list item in a list block
+- second
+- third
+        """
+        res = markdown_to_blocks(md)
+        expected = [
+            "# This is a heading",
+            "This is a paragraph of text. It has some **bold** and _italic_ words inside of it.",
+            "- This is the first list item in a list block\n- second\n- third"
+        ]
+        self.assertListEqual(expected, res)
 
 if __name__ == "__main__":
     unittest.main()
