@@ -23,3 +23,6 @@ class TestParentNode(unittest.TestCase):
         parent_node = ParentNode("a", [child_node], { "href": "http://localhost:3000" })
         self.assertEqual(parent_node.to_html(), '<a href="http://localhost:3000"><span>leaf child</span></a>')
 
+if __name__ == "__main__":
+    unittest.main()
+

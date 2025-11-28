@@ -22,4 +22,6 @@ class TextLeafNode(unittest.TestCase):
         node = LeafNode("", "raw value without tag")
         self.assertEqual(node.to_html(), "raw value without tag")
         
+if __name__ == "__main__":
+    unittest.main()
 
