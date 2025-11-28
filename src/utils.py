@@ -1,4 +1,5 @@
 import re
+from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
 from leafnode import LeafNode
 from textnode import TextNode, TextType
 
@@ -32,19 +33,16 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
     return res
 
 def extract_markdown_images(text: str) -> list[tuple[str, str]]:
-    # ![some alt text](http://localhost:3000) -> [("some alt text", "http://localhost:300")]
-    return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+    return re.findall(MD_IMAGE_GROUPED_REGEXP, text)
 
 def extract_markdown_links(text: str) -> list[tuple[str, str]]:
-    # [some link](http://localhost:3000) -> [("some link", "http://localhost:3000")]
-    return re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
-MD_IMAGE_ALL_REGEXP = r"!\[.*?\]\(.*?\)"
+    return re.findall(MD_LINK_GROUPED_REGEXP, text)
+
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     res: list[TextNode] = []
     for node in old_nodes:
         text, curr_text_type = node.text, node.text_type
         extracted_images = extract_markdown_images(text)
-        # ![alt text](http://localhost:3000) -> ![alt text](http://localhost:3000)
         for idx, it in enumerate(re.split(MD_IMAGE_ALL_REGEXP, text)):
             res.append(TextNode(it, curr_text_type))
             if idx < len(extracted_images):
@@ -53,7 +51,6 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     return res
 
 
-MD_LINK_ALL_REGEXP = r"(?<!!)\[.*?\]\(.*?\)"
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     res: list[TextNode] = []
     for node in old_nodes:
