@@ -29,6 +29,14 @@ class ParentNode(HTMLNode):
                 return f"<span>{self.draw_children_to_html()}</span>"
             case "div":
                 return f"<div>{self.draw_children_to_html()}</div>"
+            case "ul":
+                return "<ul>" + self.draw_children_to_html() + "</ul>"
+            case "ol":
+                return "<ol>" + self.draw_children_to_html() + "</ol>"
+            case "li":
+                return f"<li>{self.draw_children_to_html()}</li>"
+            case "pre":
+                return f"<pre>{self.draw_children_to_html()}</pre>"
             case _:
                 return self.draw_children_to_html()
 
