@@ -1,9 +1,10 @@
-from entities.textnode import TextNode, TextType
+from os_manipulations import remove_dir, create_dir, copy_dir_to_target
 
 
 def main():
-    node = TextNode("test text", TextType.PLAIN, "https://google.com")
-    print(node)
+    remove_dir("public")
+    create_dir("public")
+    copy_dir_to_target("static", "public")
 
 
 if __name__ == "__main__":
