@@ -94,7 +94,7 @@ def block_to_block_type(document: str) -> BlockType:
     stripped = document.strip()
     if stripped.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
         return BlockType.HEADING
-    if len(re.findall(r"`{3}(.*\n)+`{3}", document, re.MULTILINE)) > 0:
+    if stripped.startswith("```") and stripped.endswith("```"):
         return BlockType.CODE
     splitted_multiline = stripped.split("\n")
     if len(splitted_multiline) > 0:
