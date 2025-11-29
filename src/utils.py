@@ -1,19 +1,12 @@
 import re
 from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
+from enums import BlockType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 from parentnode import ParentNode
 from textnode import TextNode, TextType
-from enum import Enum
 
 
-class BlockType(Enum):
-    PARAGRAPH = "paragraph"
-    HEADING = "heading"
-    CODE = "code"
-    QUOTE = "quote"
-    UNORDERED_LIST = "unordered_list"
-    ORDERED_LIST = "ordered_list"
 
 def block_type_to_html_node(document: str, type: BlockType) -> HTMLNode:
     match type:
