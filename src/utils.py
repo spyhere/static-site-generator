@@ -10,16 +10,15 @@ from entities.textnode import TextNode, TextType
 def logging(msg: str):
     def inside(func):
         def wrapper(*args, **kwargs):
-            if msg.count("$") != len(args):
-                print(f'Error: Incorrect number of $. Message: "{msg}", args: {args}')
-                return
-            res = ""
-            for idx, it in enumerate(msg.split("$")):
-                res += it
-                if idx < len(args):
-                    res += args[idx]
-            print(res)
-            return func(*args, **kwargs)
+            msg_parsed = ""
+            msg_splitted = msg.split("$")
+            for idx, it in enumerate(msg_splitted):
+                msg_parsed += it
+                if idx < len(msg_splitted) - 1:
+                    msg_parsed += args[idx]
+            res = func(*args, **kwargs)
+            print(msg_parsed)
+            return res
         return wrapper
     return inside
 
