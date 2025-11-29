@@ -1,6 +1,8 @@
 import re
 from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
+from htmlnode import HTMLNode
 from leafnode import LeafNode
+from parentnode import ParentNode
 from textnode import TextNode, TextType
 from enum import Enum
 
@@ -13,6 +15,35 @@ class BlockType(Enum):
     UNORDERED_LIST = "unordered_list"
     ORDERED_LIST = "ordered_list"
 
+def block_type_to_html_node(document: str, type: BlockType) -> HTMLNode:
+    match type:
+        case BlockType.HEADING:
+            hash_amounts = document.count("#")
+            return LeafNode(f"h{hash_amounts}", document.replace("#", "").strip())
+        case BlockType.CODE:
+            return ParentNode("pre", [LeafNode("code", document.replace("```", ""))])
+        case BlockType.QUOTE:
+            return LeafNode("quote", document)
+        case BlockType.UNORDERED_LIST:
+            children: list[HTMLNode] = []
+            for it in document.split("-"):
+                stripped = it.strip()
+                if not stripped:
+                    continue
+                local_children: list[HTMLNode] = list(map(lambda it: text_node_to_html_node(it), text_to_textnodes(stripped)))
+                children.append(ParentNode("li", local_children))
+            return ParentNode("ul", children)
+        case BlockType.ORDERED_LIST:
+            children: list[HTMLNode] = []
+            for it in re.split(r"\d\.", document):
+                stripped = it.strip()
+                if not stripped:
+                    continue
+                local_children = list(map(lambda it: text_node_to_html_node(it), text_to_textnodes(stripped)))
+                children.append(ParentNode("li", local_children))
+            return ParentNode("ol", children)
+        case BlockType.PARAGRAPH:
+            return LeafNode(value=document)
 
 def text_node_to_html_node(node: TextNode) -> LeafNode:
     match node.text_type:
