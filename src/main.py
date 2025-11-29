@@ -1,4 +1,4 @@
-from textnode import TextNode, TextType
+from entities.textnode import TextNode, TextType
 
 
 def main():

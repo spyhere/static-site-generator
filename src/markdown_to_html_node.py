@@ -1,5 +1,5 @@
-from htmlnode import HTMLNode
-from parentnode import ParentNode
+from entities.htmlnode import HTMLNode
+from entities.parentnode import ParentNode
 from utils import BlockType, block_to_block_type, block_type_to_html_node, markdown_to_blocks, text_node_to_html_node, text_to_textnodes
 
 

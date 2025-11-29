@@ -1,10 +1,10 @@
 import re
 from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
 from enums import BlockType
-from htmlnode import HTMLNode
-from leafnode import LeafNode
-from parentnode import ParentNode
-from textnode import TextNode, TextType
+from entities.htmlnode import HTMLNode
+from entities.leafnode import LeafNode
+from entities.parentnode import ParentNode
+from entities.textnode import TextNode, TextType
 
 
 
