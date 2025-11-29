@@ -7,6 +7,21 @@ from entities.parentnode import ParentNode
 from entities.textnode import TextNode, TextType
 
 
+def logging(msg: str):
+    def inside(func):
+        def wrapper(*args, **kwargs):
+            if msg.count("$") != len(args):
+                print(f'Error: Incorrect number of $. Message: "{msg}", args: {args}')
+                return
+            res = ""
+            for idx, it in enumerate(msg.split("$")):
+                res += it
+                if idx < len(args):
+                    res += args[idx]
+            print(res)
+            return func(*args, **kwargs)
+        return wrapper
+    return inside
 
 def block_type_to_html_node(document: str, type: BlockType) -> HTMLNode:
     match type:
