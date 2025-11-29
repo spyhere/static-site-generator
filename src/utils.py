@@ -1,5 +1,5 @@
 import re
-from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP
+from constants import MD_IMAGE_ALL_REGEXP, MD_IMAGE_GROUPED_REGEXP, MD_LINK_ALL_REGEXP, MD_LINK_GROUPED_REGEXP, MD_TITLE_REGEXP
 from enums import BlockType
 from entities.htmlnode import HTMLNode
 from entities.leafnode import LeafNode
@@ -144,4 +144,11 @@ def block_to_block_type(document: str) -> BlockType:
             return BlockType.ORDERED_LIST
         return BlockType.PARAGRAPH
     return BlockType.PARAGRAPH
+
+
+def extract_title(md: str) -> str:
+    match = re.match(MD_TITLE_REGEXP, md)
+    if not match:
+        raise ValueError("Expected title of the document!")
+    return "".join(match.group(2).strip())
 

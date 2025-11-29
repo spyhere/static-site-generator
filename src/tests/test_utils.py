@@ -1,5 +1,5 @@
 import unittest
-from utils import BlockType, block_to_block_type, extract_markdown_images, extract_markdown_links, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
+from utils import BlockType, block_to_block_type, extract_markdown_images, extract_markdown_links, extract_title, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_node_to_html_node, text_to_textnodes
 from entities.textnode import TextNode, TextType
 
 
@@ -230,6 +230,17 @@ This broke md markdown
         """
         res = block_to_block_type(doc)
         self.assertEqual(res, BlockType.PARAGRAPH)
+
+class TestExtractTitle(unittest.TestCase):
+    def test_empty_md(self):
+        try:
+            extract_title("")
+        except Exception as e:
+            self.assertIsInstance(e, ValueError)
+
+    def test_md_with_title(self):
+        res = extract_title("# My Title  ")
+        self.assertEqual("My Title", res)
 
 if __name__ == "__main__":
     unittest.main()
