@@ -5,9 +5,9 @@ class ParentNode(HTMLNode):
     def __init__(self, tag: str, children: list[HTMLNode], props: dict | None = None) -> None:
         super().__init__(tag, None, children, props)
 
-    def draw_children_to_html(self):
+    def draw_children_to_html(self) -> str:
         if not self.children:
-            raise ValueError("No children has been provided for ParentNode")
+            raise ValueError(f"No children has been provided for ParentNode {self.tag}")
         res = ""
         for it in self.children:
             res += it.to_html()
@@ -15,7 +15,7 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if not self.tag:
-            raise ValueError("No tag has been provided for ParentNode")
+            raise ValueError(f"No tag has been provided for ParentNode {self.tag}")
         match self.tag:
             case "p":
                 return f"<p>{self.draw_children_to_html()}</p>"
