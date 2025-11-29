@@ -12,7 +12,6 @@ def markdown_to_html_node(document: str) -> ParentNode:
             paragraph_children: list[HTMLNode] = list(map(lambda it: text_node_to_html_node(it), text_to_textnodes(block)))
             children.append(ParentNode("p", paragraph_children))
         else:
-            block = block.replace("\n", "")
             children.append(block_type_to_html_node(block, block_type))
     return ParentNode("div", children)
 
