@@ -28,9 +28,9 @@ def block_type_to_html_node(document: str, type: BlockType) -> HTMLNode:
             hash_amounts = document.count("#")
             return LeafNode(f"h{hash_amounts}", document.replace("#", "").strip())
         case BlockType.CODE:
-            return ParentNode("pre", [LeafNode("code", document.replace("```", ""))])
+            return ParentNode("pre", [LeafNode("code", document.replace("```", "").strip())])
         case BlockType.QUOTE:
-            return LeafNode("quote", document)
+            return LeafNode("blockquote", document.replace(">", "").strip())
         case BlockType.UNORDERED_LIST:
             children: list[HTMLNode] = []
             for it in document.split("-"):
