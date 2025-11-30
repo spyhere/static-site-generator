@@ -14,7 +14,6 @@ def remove_dir(dir_path: str):
             print(f"Warning: {res}")
     except Exception as e:
         print(f"Error: {e}")
-        sys.exit(1)
 
 @logging("Successfuly created $/ directory")
 def create_dir(dir_path: str):
