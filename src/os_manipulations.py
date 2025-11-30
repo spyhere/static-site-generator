@@ -58,22 +58,23 @@ def write_file(path: str, content: str):
         print(f"Error: {e}")
 
 @logging("Generated page from $ to $ using $")
-def generate_page(from_path: str, dest_path: str, template_path:str):
+def generate_page(from_path: str, dest_path: str, template_path:str, basepath: str):
     from_path_content = read_file(from_path)
     template_path_content = read_file(template_path)
 
     html_content = markdown_to_html_node(from_path_content).to_html()
     html_title = extract_title(from_path_content) 
     new_content = template_path_content.replace("{{ Title }}", html_title).replace("{{ Content }}", html_content)
+    new_content = new_content.replace("href=/", f"href={basepath}").replace("src=/", f"src={basepath}")
 
     write_file(dest_path, new_content)
 
-def generate_pages_recursive(dir_path_content: str, dir_path_dest: str, template_path: str):
+def generate_pages_recursive(dir_path_content: str, dir_path_dest: str, template_path: str, basepath: str):
     for it in os.listdir(dir_path_content):
         curr_path_content = os.path.join(dir_path_content, it)
         curr_path_dest = os.path.join(dir_path_dest, it)
         if os.path.isfile(curr_path_content):
-            generate_page(curr_path_content, re.sub(r"\.\w+$", ".html", curr_path_dest), template_path)
+            generate_page(curr_path_content, re.sub(r"\.\w+$", ".html", curr_path_dest), template_path, basepath)
         else:
-            generate_pages_recursive(curr_path_content, curr_path_dest, template_path)
+            generate_pages_recursive(curr_path_content, curr_path_dest, template_path, basepath)
 
