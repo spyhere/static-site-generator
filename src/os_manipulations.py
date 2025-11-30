@@ -47,7 +47,7 @@ def read_file(path: str):
 
 @logging("Wrote at $")
 def write_file(path: str, content: str):
-    dir_path = "".join(path.split("/")[:-1]) + "/"
+    dir_path = "/".join(path.split("/")[:-1]) + "/"
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     try:
