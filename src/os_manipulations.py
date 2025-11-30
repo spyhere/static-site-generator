@@ -1,4 +1,5 @@
 import sys
+import re
 import os
 import shutil
 from markdown_to_html_node import markdown_to_html_node
@@ -66,4 +67,13 @@ def generate_page(from_path: str, dest_path: str, template_path:str):
     new_content = template_path_content.replace("{{ Title }}", html_title).replace("{{ Content }}", html_content)
 
     write_file(dest_path, new_content)
+
+def generate_pages_recursive(dir_path_content: str, dir_path_dest: str, template_path: str):
+    for it in os.listdir(dir_path_content):
+        curr_path_content = os.path.join(dir_path_content, it)
+        curr_path_dest = os.path.join(dir_path_dest, it)
+        if os.path.isfile(curr_path_content):
+            generate_page(curr_path_content, re.sub(r"\.\w+$", ".html", curr_path_dest), template_path)
+        else:
+            generate_pages_recursive(curr_path_content, curr_path_dest, template_path)
 
