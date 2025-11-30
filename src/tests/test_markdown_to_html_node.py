@@ -51,7 +51,8 @@ the **same** even with inline stuff
 ```
 """
         res = markdown_to_html_node(md)
-        expected = "<div><pre><code>This is text that _should_ remainthe **same** even with inline stuff</code></pre></div>"
+        expected = """<div><pre><code>This is text that _should_ remain
+the **same** even with inline stuff</code></pre></div>"""
         self.assertEqual(expected, res.to_html())
 
     def test_with_unordered_lists(self):
