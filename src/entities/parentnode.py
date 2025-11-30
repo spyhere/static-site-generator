@@ -17,6 +17,18 @@ class ParentNode(HTMLNode):
         if not self.tag:
             raise ValueError(f"No tag has been provided for ParentNode {self.tag}")
         match self.tag:
+            case "h1":
+                return f"<h1>{self.draw_children_to_html()}</h1>"
+            case "h2":
+                return f"<h2>{self.draw_children_to_html()}</h2>"
+            case "h3":
+                return f"<h3>{self.draw_children_to_html()}</h3>"
+            case "h4":
+                return f"<h4>{self.draw_children_to_html()}</h4>"
+            case "h5":
+                return f"<h5>{self.draw_children_to_html()}</h5>"
+            case "h6":
+                return f"<h6>{self.draw_children_to_html()}</h6>"
             case "p":
                 return f"<p>{self.draw_children_to_html()}</p>"
             case "a":

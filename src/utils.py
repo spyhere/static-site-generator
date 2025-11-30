@@ -26,7 +26,9 @@ def block_type_to_html_node(document: str, type: BlockType) -> HTMLNode:
     match type:
         case BlockType.HEADING:
             hash_amounts = document.count("#")
-            return LeafNode(f"h{hash_amounts}", document.replace("#", "").strip())
+            header = document.replace("#", "").strip()
+            local_children: list[HTMLNode] = list(map(lambda it: text_node_to_html_node(it), text_to_textnodes(header)))
+            return ParentNode(f"h{hash_amounts}", local_children)
         case BlockType.CODE:
             return ParentNode("pre", [LeafNode("code", document.replace("```", "").strip())])
         case BlockType.QUOTE:
